@@ -14,8 +14,17 @@ include_directories("lib/b2d/Box2D/")
 set(B2D_INCS "lib/b2d/Box2D/")
 link_directories("${CMAKE_BINARY_DIR}/lib/sfml/lib")
 
+file(GLOB_RECURSE SOURCES 5_physics/*.cpp 5_physics/*.h)
+add_executable(5_PHYSICS ${SOURCES}
+        src/main.cpp)
+target_include_directories(5_PHYSICS SYSTEM PRIVATE ${SFML_INCS} ${B2D_INCS})
+target_link_libraries(5_PHYSICS Box2D sfml-graphics)
+set(EXECUTABLES ${EXECUTABLES} PRACTICAL_5_PHYSICS)
 
-
+if (WIN32 AND BUILD_SHARED_LIBS)
+    add_custom_command(TARGET 5_PHYSICS POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:5_PHYSICS> $<TARGET_FILE_DIR:5_PHYSICS> COMMAND_EXPAND_LISTS)
+endif()
 
 add_executable(CMakeSFMLProject src/main.cpp)
 target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics Box2D)
